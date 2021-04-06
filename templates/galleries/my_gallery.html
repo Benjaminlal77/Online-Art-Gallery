@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <a href="{% url 'albums' %}">My Albums</a>
+  <ul>
+    {% for album in albums %}
+      <li class="list-unstyled">
+        <a href="{% url 'album' album.id %}">
+          {{album.title}}
+        </a>
+      </li>
+    {% empty %}
+      <p>No albumns added yet</p>
+    {% endfor %}
+  </ul>
+
+  <ul>
+    {% for media in medias %}
+      <li class="list-unstyled">
+        <a href="{% url 'media' media.id %}">
+          {% if media.is_image %}
+            <img src= "{{media.file.url}}">
+          {% elif media.is_video %}
+            <video src="{{media.file.url}}"></video>
+          {% endif %}
+        </a>
+      </li>
+    {% empty %}
+      <p>No medias added yet.<p>
+    {% endfor %}
+  </ul>
+  
+  <a href="{% url 'new_media' %}">Add New Media</a>
+
+{% endblock %}

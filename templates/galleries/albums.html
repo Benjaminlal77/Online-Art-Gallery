@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <ul>
+    {% for album in albums %}
+      <li class="list-unstyled">
+        <a href="{% url 'album' album.id %}">
+          {{album.title}}
+        </a>
+      </li>
+    {% empty %}
+      <p>No albumns added yet</p>
+    {% endfor %}
+  </ul>
+
+{% endblock %}

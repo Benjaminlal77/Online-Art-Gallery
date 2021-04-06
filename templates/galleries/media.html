@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  {% if media.is_image %}
+    <img src= "{{media.file.url}}">
+  {% elif media.is_video %}
+    <video src="{{media.file.url}}"></video>
+  {% endif %}
+
+{% endblock %}
