@@ -4,12 +4,13 @@ class Album(models.Model):
     title = models.CharField(max_length=150)
     published_date = models.DateTimeField(auto_now_add=True)
 
-class MediaUpload(models.Model):        
-    albums = models.ManyToManyField(Album, blank=True)
-    
+class MediaUpload(models.Model):            
     title = models.CharField(max_length=200,default='Untitled')
     artist = models.CharField(max_length=100,default='Unknown')
     file = models.FileField()
+
+    albums = models.ManyToManyField(Album, blank=True)
+
     published_date = models.DateTimeField(auto_now_add=True)
 
     def __init__(self, *args, **kwargs) -> None:

@@ -2,6 +2,11 @@
 
 {% block content %}
 
+  <form enctype="multipart/form-data" action="{% url 'new_media' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
 
+    <button name="submit" class="btn btn-primary">Add Media</button>
+  </form>
 
-{% endblock %}
+{% endblock content %}
