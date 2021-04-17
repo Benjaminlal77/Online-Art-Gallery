@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # My apps
     'core',
     'galleries',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,6 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = BASE_DIR / 'static/medias'
 STATIC_ROOT = BASE_DIR/ 'staticfiles'
+
+# My settings
+LOGIN_URL = '/users/login/'
