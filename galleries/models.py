@@ -7,11 +7,14 @@ class Album(models.Model):
     published_date = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, on_delete=models.deletion.CASCADE)
 
+    def __str__(self):
+        return self.title
+
 class MediaUpload(models.Model):            
+    file = models.FileField(validators=[validate_media_file_extension])
     title = models.CharField(max_length=200, blank=True)
     artist = models.CharField(max_length=100, blank=True)
     tags = models.CharField(max_length=500, validators=[validate_tags_format], blank=True)
-    file = models.FileField(validators=[validate_media_file_extension])
 
     albums = models.ManyToManyField(Album, blank=True)
 
@@ -52,4 +55,6 @@ class MediaUpload(models.Model):
         check_tags()
         find_file_type()
         
-        
+    def __str__(self):
+        return self.title
+            

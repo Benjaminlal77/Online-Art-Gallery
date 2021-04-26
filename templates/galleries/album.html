@@ -2,12 +2,12 @@
 
 {% block content %}
 
-  <h1>{{album.title}}</h1>
+  <h1>{{album}}</h1>
 
   <ul>
     {% for media in medias %}
       <li class="list-unstyled">
-        <a href="{% url 'media' media.id %}">
+        <a href="{% url 'media' owner.username media.id %}">
           
           {% if media.is_image %}
             <img src= "{{media.file.url}}">

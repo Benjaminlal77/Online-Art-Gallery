@@ -1,11 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-  <body>
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quo quae aspernatur eligendi vitae voluptas minima vero illum tempora recusandae soluta tenetur, ab ducimus! Harum deleniti voluptatibus quia quae, rem corporis?
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate magnam quas fugit vitae deserunt voluptates, error debitis qui aut ratione accusantium, nesciunt necessitatibus numquam illum doloremque ad, id nihil minus.
-    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsam vitae magni reiciendis est quibusdam consequatur asperiores assumenda tenetur fuga, itaque nemo porro nulla officiis fugit expedita? Facere id at ipsa!
-  </body>
+  <ul>
+    {% for registered_user in registered_users %}
+      <li>
+        <a href="{% url 'gallery' registered_user.username %}">{{ registered_user.username }}</a>
+      </li>
+    {% empty %}
+      No Users 
+    {% endfor %}
+  </ul>
 
 {% endblock content %}

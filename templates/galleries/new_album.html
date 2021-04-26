@@ -4,7 +4,7 @@
 
   <form enctype="multipart/form-data" action="{% url 'new_album' %}" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form.as_ul }}
 
     <button name="submit" class="btn btn-primary">Add Album</button>
   </form>

@@ -4,8 +4,8 @@
   <ul>
     {% for album in albums %}
       <li class="list-unstyled">
-        <a href="{% url 'album' album.id %}">
-          {{album.title}}
+        <a href="{% url 'album' owner.username album.id %}">
+          {{album}}
         </a>
       </li>
     {% empty %}
@@ -13,6 +13,8 @@
     {% endfor %}
   </ul>
 
-  <a href="{% url 'new_album' %}">Add Album</a>
+  {% if user == owner %}
+    <a href="{% url 'new_album' %}">Add Album</a>
+  {% endif %}
 
 {% endblock content %}

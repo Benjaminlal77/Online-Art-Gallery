@@ -1,9 +1,13 @@
 from django.core.exceptions import ValidationError
 
 def validate_tags_format(tags):
-    for character in tags:
-        if character == ' ':
-            raise ValidationError
+    for tag in tags:
+        print('Working tags')
+        for character in tag:
+            print('Getting Characters')
+            if character == ' ':
+                print('Validation Error')
+                raise ValidationError('Do not put spaces in tags')    
 
 def validate_media_file_extension(file):
     def is_image():
