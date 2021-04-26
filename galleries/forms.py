@@ -21,3 +21,4 @@ class AlbumForm(forms.ModelForm):
     class Meta:
         model = Album
         exclude = ['published_date', 'owner']
+        widgets = {'title':forms.TextInput(attrs={'class':'form-control', 'id':'title', 'placeholder':'Enter title'})}

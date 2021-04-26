@@ -1,10 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
+  <h1 class="display-4 my-3 text-center">New Media</h1>
 
-  <form enctype="multipart/form-data" action="{% url 'new_album' %}" method="post">
+  <hr class="w-50">
+
+  <form class="m-auto w-50" enctype="multipart/form-data" action="{% url 'new_album' %}" method="post">
     {% csrf_token %}
-    {{ form.as_ul }}
+    <div class="container mb-5">
+      <div class="row">
+        <div class="col">
+          {{ form }}
+        </div>
+      </div>
+    </div>
 
     <button name="submit" class="btn btn-primary">Add Album</button>
   </form>
