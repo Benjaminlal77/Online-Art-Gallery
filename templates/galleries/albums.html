@@ -5,7 +5,7 @@
     {% for album in albums %}
       <li class="list-unstyled">
         <a href="{% url 'album' owner.username album.id %}">
-          {{album}}
+          {{album.title}}
         </a>
       </li>
     {% empty %}

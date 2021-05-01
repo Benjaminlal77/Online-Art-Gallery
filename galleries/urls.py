@@ -8,7 +8,6 @@ urlpatterns = [
     path('new_album/', views.new_album_view, name='new_album'),
     path('<username>/', views.gallery_view, name='gallery'),
 
-    path('<username>/albums/', views.albums_view, name='albums'),
-    path('<username>/albums/<album_id>/', views.album_view, name='album'),    
-    path('<username>/<media_id>/', views.media_view, name='media'),
-] 
+    path('<username>/<album_title>/', views.album_view, name='album'),  
+    path('<username>/medias/<media_id>/', views.media_view, name='media'),
+]

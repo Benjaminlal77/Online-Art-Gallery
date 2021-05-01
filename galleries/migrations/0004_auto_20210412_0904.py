@@ -3,7 +3,6 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import galleries.validators
 
 
 class Migration(migrations.Migration):
@@ -29,7 +28,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='mediaupload',
             name='tags',
-            field=models.CharField(blank=True, max_length=500, validators=[galleries.validators.validate_tags_format]),
+            field=models.CharField(blank=True, max_length=500),
         ),
         migrations.AlterField(
             model_name='mediaupload',
@@ -39,7 +38,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='mediaupload',
             name='file',
-            field=models.FileField(upload_to='', validators=[galleries.validators.validate_media_file_extension]),
+            field=models.FileField(upload_to=''),
         ),
         migrations.AlterField(
             model_name='mediaupload',

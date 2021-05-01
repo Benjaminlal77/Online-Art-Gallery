@@ -1,20 +1,29 @@
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+
 from django.db import models
 from django.contrib.auth.models import User
-from .validators import *
+
+@receiver(post_save, sender=User)
+def watchlist_create(sender, instance=None, created=False, **kwargs):
+    if created:
+        Album.objects.create(title='Recent', owner=instance)
 
 class Album(models.Model):
+    class Meta:
+        unique_together = ['title', 'owner']
     title = models.CharField(max_length=150)
     published_date = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, on_delete=models.deletion.CASCADE)
-
+        
     def __str__(self):
         return self.title
 
 class MediaUpload(models.Model):            
-    file = models.FileField(validators=[validate_media_file_extension])
+    file = models.FileField()
     title = models.CharField(max_length=200, blank=True)
     artist = models.CharField(max_length=100, blank=True)
-    tags = models.CharField(max_length=500, validators=[validate_tags_format], blank=True)
+    tags = models.CharField(max_length=500, blank=True)
 
     albums = models.ManyToManyField(Album, blank=True)
 
@@ -48,7 +57,7 @@ class MediaUpload(models.Model):
             
         def check_tags():    
             self.tags = [tag for tag in self.tags.split(',')]
-            
+        
         super().__init__(*args, **kwargs)
         
         check_char_fields()

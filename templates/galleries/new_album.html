@@ -1,19 +1,24 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+  <script src="{% static 'js/new_album.js' %}"></script>
+{% endblock head %}
 
 {% block content %}
-  <h1 class="display-4 my-3 text-center">New Media</h1>
+  <h1 class="display-4 my-3 text-center">New Album</h1>
 
   <hr class="w-50">
 
-  <form class="m-auto w-50" enctype="multipart/form-data" action="{% url 'new_album' %}" method="post">
+  <form class="m-auto w-50 needs-validation" enctype="multipart/form-data" action="{% url 'new_album' %}" method="post">
     {% csrf_token %}
-    <div class="container mb-5">
-      <div class="row">
-        <div class="col">
-          {{ form }}
+      <div class="container mb-5">
+        <div class="row">
+          <div class="col">
+            {{form}}
+          </div>
         </div>
       </div>
-    </div>
 
     <button name="submit" class="btn btn-primary">Add Album</button>
   </form>

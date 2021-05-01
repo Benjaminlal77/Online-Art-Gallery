@@ -1,25 +1,30 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/album.css' %}">
+{% endblock head %}
 
 {% block content %}
 
-  <h1>{{album}}</h1>
+  <h1>{{album.title}}</h1>
 
-  <ul>
-    {% for media in medias %}
-      <li class="list-unstyled">
+  <div class="container">
+    <div class="row">
+      {% for media in medias %}
+      <div class="col-sm-3 mb-1">
         <a href="{% url 'media' owner.username media.id %}">
-          
           {% if media.is_image %}
-            <img src= "{{media.file.url}}">
+            <img class="album-media" src= "{{media.file.url}}">
           {% elif media.is_video %}
-            <video src="{{media.file.url}}"></video>
+            <video class="album-media" src="{{media.file.url}}"></video>
           {% endif %}
-          
         </a>
-      </li>
+      </div>
     {% empty %}
       <p>No medias added yet.<p>
     {% endfor %}
-  </ul>
+    </div>
+  </div>
 
 {% endblock content %}

@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+  <script src="{% static 'js/new_media.js' %}"></script>
+{% endblock head %}
 
 {% block content %}
   <h1 class="display-4 my-3 text-center">New Media</h1>

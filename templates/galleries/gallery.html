@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <a href="{% url 'albums' owner.username %}">Albums</a>
   <ul>
     {% for album in albums %}
       <li class="list-unstyled">
-        <a href="{% url 'album' owner.username album.id %}">
-          {{album}}
+        <a href="{% url 'album' owner.username album.title %}">
+          {{album.title}}
         </a>
       </li>
     {% empty %}
@@ -14,22 +13,9 @@
     {% endfor %}
   </ul>
 
-  <ul>
-    {% for media in medias %}
-      <li class="list-unstyled">
-        <a href="{% url 'media' owner.username media.id %}">
-          {% if media.is_image %}
-            <img src= "{{media.file.url}}">
-          {% elif media.is_video %}
-            <video src="{{media.file.url}}"></video>
-          {% endif %}
-        </a>
-      </li>
-    {% empty %}
-      <p>No medias added yet.<p>
-    {% endfor %}
-  </ul>
   {% if user == owner %}
+    <a href="{% url 'new_album' %}">Add New Album</a>
+    <br>
     <a href="{% url 'new_media' %}">Add New Media</a>
   {% endif %}
 
