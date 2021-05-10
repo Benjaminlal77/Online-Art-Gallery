@@ -10,12 +10,17 @@
 
   <hr class="w-50">
 
-  <form class="m-auto w-50 needs-validation" enctype="multipart/form-data" action="{% url 'new_album' %}" method="post">
+  <form class="m-auto w-50" enctype="multipart/form-data" action="{% url 'new_album' %}" method="post">
     {% csrf_token %}
       <div class="container mb-5">
         <div class="row">
           <div class="col">
-            {{form}}
+            <div class="form-group">
+              {{form}}
+              <small class="form-text text-muted">
+                Only use characters A-Z and underscores
+              </small>
+            </div>
           </div>
         </div>
       </div>

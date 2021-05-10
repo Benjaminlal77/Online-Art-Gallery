@@ -7,7 +7,9 @@
 
 {% block content %}
 
-  <h1>{{album.title}}</h1>
+  <h1 class="display-4 my-3 text-center">{{album.title}}</h1>
+
+  <hr class="w-100">
 
   <div class="container">
     <div class="row">
@@ -15,16 +17,50 @@
       <div class="col-sm-3 mb-1">
         <a href="{% url 'media' owner.username media.id %}">
           {% if media.is_image %}
-            <img class="album-media" src= "{{media.file.url}}">
+            <img class="album-media" src= "{{media.file.url}}" alt="{{media.file.name}}">
           {% elif media.is_video %}
-            <video class="album-media" src="{{media.file.url}}"></video>
+          <video class="album-media" poster="https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif" alt="Album Media" autoplay muted loop>
+            <source src="{{media.file.url}}">
+          </video>
           {% endif %}
         </a>
       </div>
     {% empty %}
-      <p>No medias added yet.<p>
+      <h1>No medias added yet.<h1>
     {% endfor %}
     </div>
+    <div class="row">
+      <div class="col">
+        {% if page.is_not_first_page %}
+          <div class="float-left"></div>
+            <a href="{% url 'album' owner.username album.title page.previous_page_num %}">
+              <button class="btn btn-primary"><< Previous</button>
+            </a>
+          </div>
+        {% endif %}
+        {% if page.is_not_last_page %}
+          <div class="float-right">
+            <a href="{% url 'album' owner.username album.title page.next_page_num %}">
+              <button class="btn btn-primary">Next >></button>
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    {% if user == album.owner %}
+      {% if album.title != 'Recent' %}
+        <div class="row">
+          <div class="col-sm-3 mb-1">
+            <form enctype="multipart/form-data" action="{% url 'delete_album' user.username album.title %}" method="post" id="delete-button">
+              {% csrf_token %}
+              <button type="button submit" class="btn btn-danger delete-button">Delete Album</button>
+            </form>
+          </div>
+        </div>
+      {% endif %}
+    {% endif %}
   </div>
 
 {% endblock content %}

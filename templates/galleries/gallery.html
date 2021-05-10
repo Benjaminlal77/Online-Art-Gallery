@@ -1,22 +1,55 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/gallery.css' %}">
+{% endblock head %}
 
 {% block content %}
-  <ul>
-    {% for album in albums %}
-      <li class="list-unstyled">
-        <a href="{% url 'album' owner.username album.title %}">
-          {{album.title}}
-        </a>
-      </li>
-    {% empty %}
-      <p>No albumns added yet</p>
-    {% endfor %}
-  </ul>
+  <h1 class="display-4 my-3 text-center">{{owner.username}}</h1>
 
-  {% if user == owner %}
-    <a href="{% url 'new_album' %}">Add New Album</a>
-    <br>
-    <a href="{% url 'new_media' %}">Add New Media</a>
-  {% endif %}
+  <hr class="w-100">
+  
+  <div class="container">
+    <div class="row">
+      {% for album in albums %}
+        <div class="col-sm-4">
+          <a href="{% url 'album' owner.username album.title 1 %}">
+            {% if album.preview_image_url %}
+              {% if album.preview_image_is_image %}
+                <img class="album-preview-image" src="{{album.preview_image_url}}" id="preview-image" alt="Preview image">
+              {% elif album.preview_image_is_video %}
+                <video class="album-preview-image" poster="https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif" id="preview-image" alt="Preview image" autoplay muted loop>
+                  <source src="{{album.preview_image_url}}">
+                </video>
+              {% endif %}
+            {% else %}
+              <img class="album-preview-image" src="https://vishwaentertainers.com/wp-content/uploads/2020/04/No-Preview-Available.jpg" alt="No Preview Available">
+            {% endif %}
+            <p class="album-title">{{album.title}}</p>
+          </a>
+        </div>
+      {% empty %}
+      {% endfor %}
+    </div>
+    <div class="row">
+      <div class="col">
+        {% if page.is_not_first_page %}
+          <div class="float-left"></div>
+            <a href="{% url 'gallery' owner.username page.previous_page_num %}">
+              <button class="btn btn-primary"><< Previous</button>
+            </a>
+          </div>
+        {% endif %}
+        {% if page.is_not_last_page %}
+          <div class="float-right">
+            <a href="{% url 'gallery' owner.username page.next_page_num %}">
+              <button class="btn btn-primary">Next >></button>
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 
 {% endblock content %}

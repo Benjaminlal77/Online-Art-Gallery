@@ -1,15 +1,56 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+  <script src="{% static 'js/register.js' %}"></script>
+{% endblock %}
 
 {% block content %}
+  <h1 class="display-4 my-3 text-center">Register</h1>
 
-  <form method="post" action="{% url 'register' %}">
+  <hr class="w-50">
 
+  <form method="post" action="{% url 'register' %}" class="form m-auto w-50">
+
+    {{ form.errors }}
     {% csrf_token %}
-    {{ form.as_p }}
+    <div class="container">
+      <div class="row">
+        <div class="col-lg">
+          <div class="form-group">
+            <label for="id_username">Username:</label>
+            {{form.username}}
+            <small class="form-text text-muted">
+              Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg">
+          <div class="form-group">
+            <label for="id_password1">Password:</label>
+            {{form.password1}}
+            <small class="form-text text-muted">
+              Your password must contain at least 8 characters.
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg">
+          <div class="form-group">
+            <label for="id_password2">Password confirmation:</label>
+            {{form.password2}}
+            <small class="form-text text-muted">
+              Enter the same password as before, for verification.
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <button name="submit">register</button>
-    <input type="hidden" name="next" value="{% url 'index' %}" />
-
+    <button name="submit" class="btn btn-primary">Register</button>
   </form>
 
 {% endblock content %}

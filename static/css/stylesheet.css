@@ -1,0 +1,12 @@
+body {
+  padding-bottom: 150px;
+}
+
+video.loading {
+  background: black url(https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif) center center no-repeat;
+}
+
+.delete-button {
+  position : absolute;
+  top: 50px;
+}

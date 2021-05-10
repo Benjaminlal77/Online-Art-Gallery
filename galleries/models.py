@@ -4,6 +4,8 @@ from django.db.models.signals import post_save
 from django.db import models
 from django.contrib.auth.models import User
 
+import magic
+
 @receiver(post_save, sender=User)
 def watchlist_create(sender, instance=None, created=False, **kwargs):
     if created:
@@ -15,6 +17,27 @@ class Album(models.Model):
     title = models.CharField(max_length=150)
     published_date = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, on_delete=models.deletion.CASCADE)
+        
+    def __init__(self, *args, **kwargs) -> None:
+        def determine_preview_image_type():
+            try:
+                lastest_media_index = len(self.mediaupload_set.values('file')) - 1 
+                lastest_media_url = self.mediaupload_set.values('file')[lastest_media_index]['file']
+                self.preview_image = self.mediaupload_set.last()
+                if self.preview_image.is_image:
+                    self.preview_image_is_image = True
+                    self.preview_image_is_video = False
+                elif self.preview_image.is_video:
+                    self.preview_image_is_image = False
+                    self.preview_image_is_video = True
+                    
+                self.preview_image_url = '/medias/' + lastest_media_url
+            except (IndexError, AssertionError, ValueError):
+                pass
+
+            
+        super().__init__(*args, **kwargs)
+        determine_preview_image_type()
         
     def __str__(self):
         return self.title
@@ -31,38 +54,24 @@ class MediaUpload(models.Model):
     owner = models.ForeignKey(User, on_delete=models.deletion.CASCADE)
 
     def __init__(self, *args, **kwargs) -> None:
-        def find_file_type():                
-            def check_if_is_image():
-                valid_image_extensions = ['jpeg','jpg','png','gif','svg']
-                return file_extension.lower() in valid_image_extensions          
-            def check_if_is_video():
-                valid_video_extensions = ['mp4','mov','ogg','avi','m4v','mp2','mpg','mpv','webm']
-                return file_extension.lower() in valid_video_extensions
-
+        def determine_media_type():
             try:
-                file_extension = self.file.name.split('.')[1]
-                self.is_image = check_if_is_image()
-                self.is_video = check_if_is_video()
-            except IndexError:
+                media_type = magic.from_file('static/medias/' + self.file.name, mime=True).split('/')[0]
+                if media_type == 'image':
+                    self.is_image = True
+                    self.is_video = False
+                elif media_type == 'video' or media_type == 'audio': # libmagic sometimes returns 'audio' for big video files
+                    self.is_image = False
+                    self.is_video = True
+            except (FileNotFoundError, PermissionError):
                 pass
-
-        def check_char_fields():
-            def is_empty(char_field):
-                return char_field == ''
-        
-            if is_empty(self.title):
-                self.title = 'Untitled'
-            if is_empty(self.artist):
-                self.artist = 'Unknown'
-            
-        def check_tags():    
-            self.tags = [tag for tag in self.tags.split(',')]
-        
+                
         super().__init__(*args, **kwargs)
         
-        check_char_fields()
-        check_tags()
-        find_file_type()
+        determine_media_type()
+    
+    def tags_as_list(self):
+        return self.tags.split('\n')
         
     def __str__(self):
         return self.title

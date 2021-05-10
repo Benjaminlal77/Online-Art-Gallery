@@ -4,7 +4,7 @@
   <ul>
     {% for registered_user in registered_users %}
       <li>
-        <a href="{% url 'gallery' registered_user.username %}">{{ registered_user.username }}</a>
+        <a href="{% url 'gallery' registered_user.username 1 %}">{{ registered_user.username }}</a>
       </li>
     {% empty %}
       No Users 

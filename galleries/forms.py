@@ -22,7 +22,7 @@ class AlbumForm(forms.ModelForm):
     class Meta:
         model = Album
         exclude = ['published_date', 'owner']
-        widgets = {'title':forms.TextInput(attrs={'class':'form-control spaceless-input', 'id':'title-input', 'placeholder':'Enter title', 'required':'true'})}
+        widgets = {'title':forms.TextInput(attrs={'class':'form-control', 'id':'album-title-input', 'placeholder':'Enter title', 'required':'true'})}
     
     def __init__(self, user, *args, **kwargs):
         super(AlbumForm, self).__init__(*args, **kwargs)
@@ -35,5 +35,8 @@ class AlbumForm(forms.ModelForm):
             pass
         else:
             raise ValidationError('You already have an album named "' + self.cleaned_data['title'] + '"!')
+        finally:
+            if self.cleaned_data['title'] == 'medias':
+                raise ValidationError('Please use a different title!')
 
         return self.cleaned_data

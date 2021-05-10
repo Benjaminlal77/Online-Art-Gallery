@@ -1,13 +1,42 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/media.css' %}">
+{% endblock head %}
 
 {% block content %}
 
-  {% if media.is_image %}
-    <img src= "{{media.file.url}}">
-  {% elif media.is_video %}
-    <video src="{{media.file.url}}"></video>
-  {% endif %}
-
-  <p>{{media.title}},{{media.artist}},{{media.tags}}</p>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        {% if media.is_image %}
+          <img class="media" src= "{{media.file.url}}" alt="{{media.file.name}}">
+        {% elif media.is_video %}
+        <video class="media" poster="https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif" alt="Media" autoplay controls loop>
+          <source src="{{media.file.url}}">
+        </video>
+        {% endif %}
+      </div>
+    </div>
+    <d1 class="row mb-4">
+      <dt class="col-sm-3">Title:</dt>
+      <dd class="col-sm-9">{{media.title}}</dd>
+      <dt class="col-sm-3">Artist:</dt>
+      <dd class="col-sm-9">{{media.artist}}</dd>
+      <dt class="col-sm-3">Tags:</dt>
+      {% for tag in media.tags_as_list %}
+        <dd class="col-sm-9">{{tag}}</dd>
+      {% empty %}
+        <dd class="col-sm-9">No tags added</dd>
+      {% endfor %}
+    </d1>
+    {% if user == media.owner %}
+      <form enctype="multipart/form-data" action="{% url 'delete_media' user.username media.id %}" method="post">
+        {% csrf_token %}
+        <button type="button submit" class="btn btn-danger" id="delete-button">Delete Media</button>
+      </form>
+    {% endif %}
+  </div>
 
 {% endblock content %}

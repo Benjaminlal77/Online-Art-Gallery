@@ -1,18 +1,38 @@
 {% extends "base.html" %}
 
-{% block header %}
-  <h2>Log in to your account.</h2>
-{% endblock header %}
-
 {% block content %}
+  <h1 class="display-4 my-3 text-center">Login to your account</h1>
 
-  <form method="post" action="{% url 'login' %}" class="form">
+  <hr class="w-50">
+  <form method="post" action="{% url 'login' %}" class="form m-auto w-50">
     {% csrf_token %}
-    {{ form }}
+    <div class="container">
+      <div class="row">
+        <div class="col-lg">
+          <div class="form-group">
+            <label for="id_username">Username:</label>
+            {{form.username}}
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg">
+          <div class="form-group">
+            <label for="id_password">Password:</label>
+            {{form.password}}
+          </div>
+        </div>
+      </div>
+      <div class="row mb-4">
+        <div class="col-lg">
+          <small class="">
+            <strong class="text-danger">{{form.error_message}}</strong>
+          </small>
+        </div>
+      </div>
+    </div>
 
     <button name="submit" class="btn btn-primary">Log in</button>
-
-    <input type="hidden" name="next" value="{% url 'index' %}" />
   </form>
 
 {% endblock content %}
