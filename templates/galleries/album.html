@@ -14,20 +14,20 @@
   <div class="container">
     <div class="row">
       {% for media in medias %}
-      <div class="col-sm-3 mb-1">
-        <a href="{% url 'media' owner.username media.id %}">
-          {% if media.is_image %}
-            <img class="album-media" src= "{{media.file.url}}" alt="{{media.file.name}}">
-          {% elif media.is_video %}
-          <video class="album-media" poster="https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif" alt="Album Media" autoplay muted loop>
-            <source src="{{media.file.url}}">
-          </video>
-          {% endif %}
-        </a>
-      </div>
-    {% empty %}
-      <h1>No medias added yet.<h1>
-    {% endfor %}
+        <div class="col-sm-3 mb-1">
+          <a href="{% url 'media' owner.username media.id %}">
+            {% if media.is_image %}
+              <img class="album-media" src= "{{media.file.url}}" alt="{{media.file.name}}">
+            {% elif media.is_video %}
+            <video class="album-media" poster="https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif" alt="Album Media" autoplay muted loop>
+              <source src="{{media.file.url}}">
+            </video>
+            {% endif %}
+          </a>
+        </div>
+      {% empty %}
+        <h1>No medias added yet.<h1>
+      {% endfor %}
     </div>
     <div class="row">
       <div class="col">

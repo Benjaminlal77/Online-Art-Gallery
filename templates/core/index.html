@@ -2,10 +2,24 @@
 
 {% block content %}
 
-  <p>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi impedit ab, 
-    odit perspiciatis error commodi sit nulla totam necessitatibus enim? 
-    Perferendis fugit, eius hic quaerat repellat nulla eos sint aliquid!
-  </p>
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col text-center">
+        <h1>
+          Upload your <a href="{% url 'new_media' %}">medias</a> or create <a href="{% url 'new_album' %}">albums</a> 
+          on your own online gallery, or <a href="{% url 'search' 1 %}">check out what other people have uploaded!</a>
+        </h1>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col text-center">
+        {% if user.is_authenticated %}
+          Start uploading <a href="{% url 'new_media' %}">medias</a> or create <a href="{% url 'new_album' %}">albums</a>
+        {% else %}
+          Get started by <a href="{% url 'register' %}">registering</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 
 {% endblock content %}

@@ -10,9 +10,14 @@ from .forms import *
 
 import math
 
+def check_if_page_exists(page, page_num):
+    if page_num > page.num_of_pages or page_num < 1:
+        raise Http404
+
 class Page:
     def __init__(self, objects, current_page_num, num_of_objects_per_page):
         self.previous_page_num = current_page_num - 1
+        self.current_page_num = current_page_num
         self.next_page_num = current_page_num + 1
         
         self.num_of_pages = math.ceil(len(objects)/num_of_objects_per_page)
@@ -22,10 +27,82 @@ class Page:
         self.is_not_first_page = current_page_num != 1
         self.is_not_last_page = current_page_num != self.num_of_pages
 
-def galleries_view(request):
-    registered_users = User.objects.all()
-    context = {'registered_users' : registered_users}
-    return render(request, 'galleries/index.html', context)
+def search_view(request, page_num):
+    def get_main_page():
+        page_checked_before = pages_to_check[0]
+        page = page_checked_before
+        for page_to_check in pages_to_check:
+            if page_to_check.num_of_pages > page_checked_before.num_of_pages:
+                page = page_to_check
+            page_checked_before = page_to_check
+        
+        return page
+    
+    def search_for_objects():
+        print(request.GET)
+        if 'albums-checkbox' in request.GET:
+            albums_page = Page(Album.objects.filter(title__icontains=query), page_num, 9)
+            pages_to_check.append(albums_page)
+            context['searched_for_albums'] = True
+        
+        if 'users-checkbox' in request.GET:
+            users_page = Page(User.objects.filter(username__icontains=query), page_num, 20)
+            pages_to_check.append(users_page)
+            context['searched_for_users'] = True
+            
+        if 'medias-checkbox' in request.GET or len(context) == 0:
+            medias_page = Page(MediaUpload.objects.filter(tags__icontains=query), page_num, 20)
+            pages_to_check.append(medias_page)
+            context['searched_for_medias'] = True
+        
+    def get_objects():
+        if 'searched_for_albums' in context:
+            starting_index = (page_num * 9) - 9
+            ending_index = starting_index + 9
+    
+            albums = Album.objects.filter(title__icontains=query).order_by('-published_date').reverse()[starting_index:ending_index]
+            context['albums'] = albums
+        
+        if 'searched_for_users' in context:
+            starting_index = (page_num * 20) - 20
+            ending_index = starting_index + 20
+    
+            users = User.objects.filter(username__icontains=query).order_by('-date_joined').reverse()[starting_index:ending_index]
+            context['registered_users'] = users
+        
+        if 'searched_for_medias' in context:
+            starting_index = (page_num * 20) - 20
+            ending_index = starting_index + 20
+    
+            medias = MediaUpload.objects.filter(tags__icontains=query).order_by('-published_date').reverse()[starting_index:ending_index]
+            context['medias'] = medias
+    
+    if 'q' in request.GET:            
+        query = request.GET['q']
+        context = {}
+        pages_to_check = []
+        
+        search_for_objects()
+        page = get_main_page()
+        
+        check_if_page_exists(page, page_num)
+        get_objects()
+        
+    else:
+        query = ''
+        
+        page = Page(MediaUpload.objects.all(), page_num, 20)
+        check_if_page_exists(page, page_num)
+        
+        starting_index = (page_num * 20) - 20
+        ending_index = starting_index + 20
+        
+        medias = MediaUpload.objects.all()[starting_index:ending_index]
+        context = {'medias' : medias, 'searched_for_medias' : True}
+    
+    context['page'] = page
+    context['query'] = query
+    return render(request, 'galleries/search.html', context)
 
 @login_required
 def new_media_view(request):
@@ -83,8 +160,7 @@ def gallery_view(request, username, page_num):
     albums = Album.objects.filter(owner=owner.pk)
     page = Page(albums, page_num, 9)
     
-    if page_num > page.num_of_pages or page_num < 1:
-        raise Http404
+    check_if_page_exists(page, page_num)
     
     starting_index = (page_num * 9) - 9
     ending_index = starting_index + 9
@@ -101,8 +177,7 @@ def album_view(request, username, album_title, page_num):
     medias = album.mediaupload_set.order_by('-published_date')
     page = Page(medias, page_num, 20)
     
-    if page_num > page.num_of_pages or page_num < 1:
-        raise Http404
+    check_if_page_exists(page, page_num)
 
     starting_index = (page_num * 20) - 20
     ending_index = starting_index + 20
